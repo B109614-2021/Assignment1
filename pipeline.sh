@@ -2,14 +2,22 @@
 
 echo -n 'Please enter the path to the folder containing the samples:'
 read samples
-ls $samples
+sample_names=$(ls $samples)
 
-mkdir tmp
-cp $samples tmp
-ls tmp/
-rm -r tmp
- 
-# test_files=$(grep -v 100k.fqfiles < ls $samples)
+echo $sample_names
+
+unset count
+
+for name in $sample_names
+
+	# filter for samples to be processed
+	# fastcq 
+	# save results as a tmp_file 
+
+do 
+count=$((count+1))
+echo $count 
+done 
 
 # echo test_files
 
