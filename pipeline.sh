@@ -4,26 +4,31 @@ echo -n 'Please enter the path to the folder containing the samples:'
 read samples
 sample_names=$(ls $samples)
 
-echo $sample_names
+echo -n 'Please enter the path to the file containing sample details:'
+read details
+
+# create a directory to hold temporary files in
 
 mkdir temp
-
+# mkdir fastqc_output 
 unset count
+
+# use 100k.fqfiles to select sample files
 
 while read ID Sample Replicate Time Treatment End1 End2
 do	
 	for name in $sample_names
-	do 
-	echo $name 	
+	do  	
 	if [[ $name == $End1 || $name == $End2 ]]; then
-		  	
-		echo "matches" 
+		FilePath="$samples$name"	  	
+		echo $FilePath 
 		fi
 	# filter for samples to be processed
 	# fastcq 
-	# save results as a tmp_file  
+	# save results in a tmp_file
+	# basic statistics can be found in the produced zip file in summary.txt and fastqc_data.txt  
 	done 
-done < /localdisk/data/BPSM/AY21/fastq/100k.fqfiles
+done < $details 
 
 # echo test_files
 
