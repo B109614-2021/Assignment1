@@ -6,18 +6,24 @@ sample_names=$(ls $samples)
 
 echo $sample_names
 
+mkdir temp
+
 unset count
 
-for name in $sample_names
-
+while read ID Sample Replicate Time Treatment End1 End2
+do	
+	for name in $sample_names
+	do 
+	echo $name 	
+	if [[ $name == $End1 || $name == $End2 ]]; then
+		  	
+		echo "matches" 
+		fi
 	# filter for samples to be processed
 	# fastcq 
-	# save results as a tmp_file 
-
-do 
-count=$((count+1))
-echo $count 
-done 
+	# save results as a tmp_file  
+	done 
+done < /localdisk/data/BPSM/AY21/fastq/100k.fqfiles
 
 # echo test_files
 
