@@ -1,5 +1,8 @@
 ### read in files
 
+rm -fr temp
+rm -fr hisat_index
+
 echo -n 'Please enter the path to the folder containing the samples:'
 read samples
 sample_names=$(ls $samples)
@@ -10,27 +13,27 @@ read details
 # create a directory to hold temporary files in
 
 mkdir temp
-# mkdir fastqc_output
+mkdir fastqc_output
 
 # use 100k.fqfiles to select sample files
 
-while read ID Sample Replicate Time Treatment End1 End2
-do	
-	for name in $sample_names
-	do  	
-	if [[ $name == $End1 || $name == $End2 ]]; then
-		FilePath="$samples$name"	  	
-		echo $FilePath
-		fastqc -o temp -f fastq --extract $FilePath 
-		fi
-	# filter for samples to be processed
-	# fastcq
-	# save results in a tmp_file
-	# basic statistics can be found in the produced zip file in summary.txt and fastqc_data.txt
-	# --extract unzips output file, want to extract the relevant info, save in new document then delete unzipped files
-	# need correct field of file name to do this  
-	done 
-done < $details 
+#while read ID Sample Replicate Time Treatment End1 End2
+#do	
+#	for name in $sample_names
+#	do  	
+#	if [[ $name == $End1 || $name == $End2 ]]; then
+#		FilePath="$samples$name"	  	
+#		echo $FilePath
+#		fastqc -o fastqc_output -f fastq --extract $FilePath 
+#		fi
+#	# filter for samples to be processed
+#	# fastcq
+#	# save results in a tmp_file
+#	# basic statistics can be found in the produced zip file in summary.txt and fastqc_data.txt
+#	# --extract unzips output file, want to extract the relevant info, save in new document then delete unzipped files
+#	# need correct field of file name to do this  
+#	done 
+#done < $details 
 
 # echo test_files
 
@@ -39,6 +42,19 @@ done < $details
 
 ### convert to HISAT2 useable format
 
+echo -n 'Please enter path to reference genome:'
+read genome
+
+# need to unzip
+cp $genome temp/genome.fasta.gz 
+
+gunzip temp/genome.fasta.gz temp/genome.fasta
+ 
+# need to use hisat2-build to create indexes for sequences to align to. comma-separated list of files with ref sequences 
+
+mkdir hisat_index
+
+hisat2-build temp/genome.fasta hisat_index/index 
 
 ### alignment using HISAT
 
