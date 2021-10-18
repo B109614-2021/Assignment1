@@ -58,8 +58,26 @@ hisat2-build temp/genome.fasta hisat_index/index
 
 ### alignment using HISAT
 
+
+while read ID Sample Replicate Time Treatment End1 End2
+do
+       for name in $sample_names
+       do
+       if [[ $name == $End1 || $name == $End2 ]]; then
+	FilePath="$samples$name"
+	cp $FilePath temp/$name
+	gunzip temp/$name --name  
+
+done < $details
+
 # Hisat2 -q for fastq (needs to be unzipped) --no-spliced-alignment to assume there are no splice sites, --qc-filter  remove bad reads 
 
+fq_files=$(ls temp/100*)
+
+for file in $fq_files;
+do
+	hisat2 -x temp/index -f $file -S ${file}  
+ 
 
 # hisat2 [options]* -x <ht2-idx> {-1 <m1> -2 <m2> | -U <r>} [-S <sam>]
 #
