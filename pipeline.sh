@@ -2,6 +2,7 @@
 
 rm -fr temp
 rm -fr hisat_index
+rm -fr fastqc_output
 
 echo -n 'Please enter the path to the folder containing the samples:'
 read samples
@@ -10,10 +11,23 @@ sample_names=$(ls $samples)
 echo -n 'Please enter the path to the file containing sample details:'
 read details
 
+echo -n 'Please enter path to reference genome:'
+read genome
+
+echo -n 'Please enter path to referemce bedfile:'
+read bedfile
+
+# check that these files/folders exist 
+
+
+
+
 # create a directory to hold temporary files in
 
 mkdir temp
 mkdir fastqc_output
+
+echo "Analysing sample file quality" 
 
 # use 100k.fqfiles to select sample files
 
@@ -42,9 +56,6 @@ mkdir fastqc_output
 
 ### convert to HISAT2 useable format
 
-echo -n 'Please enter path to reference genome:'
-read genome
-
 # need to unzip
 cp $genome temp/genome.fasta.gz 
 
@@ -52,12 +63,17 @@ gunzip temp/genome.fasta.gz temp/genome.fasta
  
 # need to use hisat2-build to create indexes for sequences to align to. comma-separated list of files with ref sequences 
 
+echo "Creating index for HISAT"
+
 mkdir hisat_index
 
-hisat2-build temp/genome.fasta hisat_index/index 
+hisat2-build -q temp/genome.fasta hisat_index/index 
 
 ### alignment using HISAT
 
+echo "unzipping sample files"
+
+# need to unzip and save into different folders depending on sample, clone and whether it is a replicate
 
 while read ID Sample Replicate Time Treatment End1 End2
 do
@@ -67,17 +83,25 @@ do
 	FilePath="$samples$name"
 	cp $FilePath temp/$name
 	gunzip temp/$name --name  
-
+	fi
+	done
 done < $details
 
 # Hisat2 -q for fastq (needs to be unzipped) --no-spliced-alignment to assume there are no splice sites, --qc-filter  remove bad reads 
 
 fq_files=$(ls temp/100*)
 
-for file in $fq_files;
-do
-	hisat2 -x temp/index -f $file -S ${file}  
- 
+echo "Creating sam file"
+
+echo $fq_files
+
+# potentially a problem with having . in file name 
+# need to sort by condition and type prior to this, then create a sam for each condition and clone
+# loop over file names with hisat, and rename for samfile (work on rename bit)
+
+hisat2 -q -x hisat_index/index -f $fq_files -S output.sam  
+  
+
 
 # hisat2 [options]* -x <ht2-idx> {-1 <m1> -2 <m2> | -U <r>} [-S <sam>]
 #
