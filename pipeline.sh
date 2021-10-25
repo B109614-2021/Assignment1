@@ -99,7 +99,7 @@ echo $fq_files
 # need to sort by condition and type prior to this, then create a sam for each condition and clone
 # loop over file names with hisat, and rename for samfile (work on rename bit)
 
-hisat2 -q -x hisat_index/index -f $fq_files -S output.sam  
+hisat2 -x hisat_index/index -q $fq_files -S output.sam  
   
 
 
@@ -119,6 +119,13 @@ hisat2 -q -x hisat_index/index -f $fq_files -S output.sam
 
 ### convert to bam file
 
+echo "Converting from sam to bam format and creating index"
+
+# add basic samtool commands for processing 1 sample
+
+samtools view output.sam > output.bam
+samtools sort output.bam -o output.bam
+samtools index output.bam
 
 ### generate counts_per_gene.tsv using bedtools
 
