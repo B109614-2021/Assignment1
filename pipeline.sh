@@ -129,6 +129,11 @@ samtools index output.bam
 
 ### generate counts_per_gene.tsv using bedtools
 
+# create a bed file allignment 
+
+echo 'aligning to bed file'
+
+bedtools intersect -c -a output.bam -b /localdisk/data/BPSM/AY21/TriTrypDB-46_TcongolenseIL3000_2019.bed -bed > output.bed
 
 ### calculate mean
 
