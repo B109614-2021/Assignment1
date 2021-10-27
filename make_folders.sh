@@ -29,15 +29,31 @@ done
 # for each unique sample id, copy file into relevant folder
 # get unique sample IDs
 
-sample_IDs=$(awk '{FS="\t"; {print $1;}}' /localdisk/data/BPSM/AY21/fastq/100k.fqfiles)
+# sample_IDs=$(awk '{FS="\t"; {print $1;}}' /localdisk/data/BPSM/AY21/fastq/100k.fqfiles)
 
-for ID in sample_IDs
+cp_end1=$(awk '{FS="\t"; {print "/" $6 " temp/" $2 "/" $5 "/" $4 "\n";}}' /localdisk/data/BPSM/AY21/fastq/100k.fqfiles)
+cp_end2=$(awk '{FS="\t"; {print "/" $7 " temp/" $2 "/" $5 "/" $4 "\n";}}' /localdisk/data/BPSM/AY21/fastq/100k.fqfiles)
+
+IFS=$'\n'
+
+for file_path in $cp_end1
 do
-awk '{FS="\n";} ($1 == $sample_IDs)' /localdisk/data/BPSM/AY21/fastq/100k.fqfiles | awk '{FS="\t"; {print $sample_folder "/" $7 " temp/" $2 "/" $5 "/" $4;}}'
+echo $file_path
+echo "$sample_folder$file_path" | xargs cp 
 
+done
+
+for file_path in $cp_end2
+do
+echo $file_path
+echo "$sample_folder$file_path" | xargs cp
+
+done
+
+# cp $sample_folder,$cp_end1
 #	if  [ "$treatment" = "Uninduced" ]
 #	then
 #	cp $sample_folder/$end_1_file temp/$sample_type/uninduced/$file_time
 #	cp $sample_folder/$end_2_file temp/$sample_type/uninduced/$file_time 
 #	fi
-done 
+
