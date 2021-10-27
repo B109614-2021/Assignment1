@@ -133,7 +133,9 @@ samtools index output.bam
 
 echo 'aligning to bed file'
 
-bedtools intersect -c -a output.bam -b /localdisk/data/BPSM/AY21/TriTrypDB-46_TcongolenseIL3000_2019.bed -bed > output.bed
+# count the number of overlaps between the reads and the genes, requiring 90% of the read to be overlapped for it to be counted 
+
+bedtools intersect -F 0.90 -c -a TriTrypDB-46_TcongolenseIL3000_2019.bed -b output.bam > output.txt
 
 ### calculate mean
 
