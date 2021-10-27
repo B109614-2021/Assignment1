@@ -23,19 +23,27 @@ do
 	done
 done
 # mkdir temp/$sample_names
-# for each line in the sample file, copy that sample into the relevant directory 
+# for each line in the sample file, copy that sample into the relevant directory
+# for line in $(awk '{FS="\t"; OFS="_"; {print $2,$4,$5,$6,$7;} {grep -v 'Sample_Time_Treatment_End1_End2'}}' /localdisk/data/BPSM/AY21/fastq/100k.fqfiles)
 
-for line in $(awk '{FS="\t"; OFS="_"; {print $2,$4,$5,$6,$7;} {grep -v 'Sample_Time_Treatment_End1_End2'}}' /localdisk/data/BPSM/AY21/fastq/100k.fqfiles)
+LINES=$(awk '{FS="\t"; OFS="X"; {print $2,$4,$5,$6,$7;} {grep -v 'Sample_Time_Treatment_End1_End2'}}' /localdisk/data/BPSM/AY21/fastq/100k.fqfiles)
+
+for line in $LINES
 do
-echo $line
-sample_type=$(awk '{FS="_"; {print $1;}}' $line)
-file_time=$(awk '{FS="_"; {print $2;}}' $line)
-treatment$(awk '{FS="_"; {print $3;}}' $line)
-end_1_file=$(awk '{FS"_"; {print $4;}}' $line)
-end_2_file=$(awk '{FS"_"; {print $5;}}' $line)
-	if  [ "$treatment" = "Uninduced" ]
-	then
-	cp $sample_folder/"$end_1_file" temp/$sample_type/uninduced/$file_time
-	cp $sample_folder/"$end_2_file" temp/$sample_type/uninduced/$file_time 
-	fi
+echo $line > temp.txt
+awk '{FS="X"; print $1;}' temp.txt
+#file_time=$(awk '{FS="_"; {print $2;}}' temp.txt)
+#treatment=$(awk '{FS="_"; {print $3;}}' temp.txt)
+#end_1_file=$(awk '{FS"_"; {print $4;}}' temp.txt)
+#end_2_file=$(awk '{FS"_"; {print $5;}}' temp.txt)
+#echo $treatment
+#echo $file_time
+#echo $sample_type
+#echo $end_1_file
+#echo $end_2_file
+#	if  [ "$treatment" = "Uninduced" ]
+#	then
+#	cp $sample_folder/$end_1_file temp/$sample_type/uninduced/$file_time
+#	cp $sample_folder/$end_2_file temp/$sample_type/uninduced/$file_time 
+#	fi
 done 
