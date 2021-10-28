@@ -1,33 +1,27 @@
 
+#!/usr/bin/bash
 #### To do: make this run for the paired ends
 
-# Hisat2 -q for fastq (needs to be unzipped) --no-spliced-alignment to assume there are no splice sites, --qc-filter  remove bad reads
+# need to bring in sample paths, then run hisat for each pair.
 
-fq_files=$(ls temp/100*)
+# find the files in temp that have been unzipped
+fq_files=$(find temp -name "*.fq")
 
-echo "Creating sam file"
+echo "Creating sam file by aligning with HISAT2"
 
-echo $fq_files
-
-# potentially a problem with having . in file name
-# need to sort by condition and type prior to this, then create a sam for each condition and clone
 # loop over file names with hisat, and rename for samfile (work on rename bit)
+# for each file, remove the "_1.fq" and "_2.fq". These can be specified during the Hisat alignment so the correct pairs are aligned together
+# also get the path to the correct folder for each sample, so sam file can be saved in the correct place 
 
-hisat2 -x hisat_index/index -q $fq_files -S output.sam
+for file in $fq_files
+do
+file_name=$(echo "$file" | awk -F ["_","/"] '{print $(NF-1);}')
+path=$(echo "$file" | awk -F "/" '{OFS="/"; {$NF=""; print $0;}}') 
+	for sample in $file_name
+	do
+	hisat2 -x temp/hisat_index/index -q -1 "$path$sample"*1* -2 "$path$sample"*2* -S "$path$sample".sam --quiet
+	done
+done 
 
-
-
-# hisat2 [options]* -x <ht2-idx> {-1 <m1> -2 <m2> | -U <r>} [-S <sam>]
-#
- # <ht2-idx>  Index filename prefix (minus trailing .X.ht2).
-  #<m1>       Files with #1 mates, paired with files in <m2>.
- #            Could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
- # <m2>       Files with #2 mates, paired with files in <m1>.
-#             Could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
-#  <r>        Files with unpaired reads.
-#             Could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
-#  <sam>      File for SAM output (default: stdout)
-#
-#  <m1>, <m2>, <r> can be comma-separated lists (no whitespace) and can be
-#  specified many times.  E.g. '-U file1.fq,file2.fq -U file3.fq'.
+# each folder should contain a sam file for each pair in that folder
 

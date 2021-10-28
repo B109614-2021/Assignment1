@@ -43,6 +43,8 @@ file_path=$(find temp -name "*.fq.gz")
 
 source prep_for_hisat.sh "$file_path" $genome
 
-#  
+# run hisat alingnment 
+
+source run_hisat.sh  
 
 
