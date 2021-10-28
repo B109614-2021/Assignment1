@@ -1,34 +1,38 @@
+#!/usr/bin/bash
 ### convert to HISAT2 useable format
 
-# need to unzip
-cp $genome temp/genome.fasta.gz
+sample_path=$1
+genome=$2
 
-gunzip temp/genome.fasta.gz temp/genome.fasta
+# make a directory to hold annotation files 
 
-# need to use hisat2-build to create indexes for sequences to align to. comma-separated list of files with ref sequences
+mkdir temp/annotation 
+ 
+# copy genome into annotation folder
+cp $genome temp/annotation/genome.fasta.gz
+
+# unzip genome
+
+gunzip -q temp/annotation/genome.fasta.gz temp/annotation/genome.fasta
+
+# need to use hisat2-build to create indexes for sequences to align to
 
 echo "Creating index for HISAT"
 
-mkdir hisat_index
+mkdir temp/hisat_index
 
-hisat2-build -q temp/genome.fasta hisat_index/index
+hisat2-build -q temp/annotation/genome.fasta temp/hisat_index/index
 
 ### alignment using HISAT
 
 echo "unzipping sample files"
 
-# need to unzip and save into different folders depending on sample, clone and whether it is a replicate
+# need to unzip and save samples in their relevant folder with the same name
 
-while read ID Sample Replicate Time Treatment End1 End2
+
+for FilePath in $sample_path
 do
-       for name in $sample_names
-       do
-       if [[ $name == $End1 || $name == $End2 ]]; then
-        FilePath="$samples$name"
-        cp $FilePath temp/$name
-        gunzip temp/$name --name
-        fi
-        done
-done < $details
+gunzip $FilePath --name
+done
 
 

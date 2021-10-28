@@ -25,7 +25,7 @@ read bedfile
 
 # copy existing samples into the standard folder structure of <sample>/<treatment>/<time>
 
-echo "saving sample files in standard folder format"
+echo "Saving sample files in standard folder format"
 
 source make_folders.sh $samples $details
 
@@ -35,9 +35,13 @@ file_path=$(find temp -name "*.fq.gz")
 
 # run fastq_analysis
 
-echo "performing FASTQC analysis"
+# echo "performing FASTQC analysis"
 
-source fastq_analysis.sh "$file_path"
+#source fastq_analysis.sh "$file_path"
+
+# unzip files and build hisat index 
+
+source prep_for_hisat.sh "$file_path" $genome
 
 #  
 
