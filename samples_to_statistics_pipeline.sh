@@ -24,3 +24,10 @@ echo -n 'Please enter path to reference bedfile:'
 read bedfile
 
 
+source make_folders.sh $samples $details
+
+# file_path=${find temp -name "*.fq.gz"}
+
+# source fastq_analysis.sh $samples $details $genome $bedfile 
+
+
