@@ -7,13 +7,9 @@
 sample_folder=$1
 details=$2
 
+# get the list of different samples eg, Clone1, Clone2 or WT and time
 sample_names=$(awk '{FS="\t"; {print $2;}}' $details | uniq | grep -v 'Sample')
 times=$(awk '{FS="\t"; {print $4;}}' $details | sort | uniq | grep -v 'Time')
-
-rm -r temp
-
-echo $sample_names
-echo $times
 
 # make a folder for each sample, treatment and time. uninduced at time 0 is pretretment
 
@@ -62,3 +58,6 @@ if test -f "$sample_folder$file";
 done
 
 
+# reset IFS to default
+
+unset IFS

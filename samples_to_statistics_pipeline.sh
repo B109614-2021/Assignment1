@@ -23,11 +23,22 @@ read genome
 echo -n 'Please enter path to reference bedfile:'
 read bedfile
 
+# copy existing samples into the standard folder structure of <sample>/<treatment>/<time>
+
+echo "saving sample files in standard folder format"
 
 source make_folders.sh $samples $details
 
-# file_path=${find temp -name "*.fq.gz"}
+# find the paths to all of the samples saved in the temp folder
 
-# source fastq_analysis.sh $samples $details $genome $bedfile 
+file_path=$(find temp -name "*.fq.gz")
+
+# run fastq_analysis
+
+echo "performing FASTQC analysis"
+
+source fastq_analysis.sh "$file_path"
+
+#  
 
 
