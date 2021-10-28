@@ -31,7 +31,6 @@ echo "Analysing sample file quality"
 
 # use 100k.fqfiles to select sample files
 
-
 ######## Files have been set up in a standard format within temp. the paths to files can be listed with the command"find temp -name "*.fq.gz""
 
 #while read ID Sample Replicate Time Treatment End1 End2

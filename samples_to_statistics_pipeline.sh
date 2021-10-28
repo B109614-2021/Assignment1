@@ -47,4 +47,10 @@ source prep_for_hisat.sh "$file_path" $genome
 
 source run_hisat.sh  
 
+# run sam to bam 
 
+source convert_to_bam.sh
+
+# align to bed fille
+
+source align_to_bed_file.sh $bedfile

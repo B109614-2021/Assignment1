@@ -1,4 +1,3 @@
-
 #!/usr/bin/bash
 #### To do: make this run for the paired ends
 
