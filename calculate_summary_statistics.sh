@@ -11,9 +11,9 @@ mkdir output
 
 # get gene and gene description from bedfile file  
 
-echo -e "Gene\tDescription" > output/output.txt
+echo -e "Gene\tDescription" > output/output.tsv
 
-awk '{FS="\t"; OFS="\t"; {print $4, $5;}}' TriTrypDB-46_TcongolenseIL3000_2019.bed >> output/output.txt
+awk '{FS="\t"; OFS="\t"; {print $4, $5;}}' TriTrypDB-46_TcongolenseIL3000_2019.bed >> output/output.tsv
 
 # Find paths to output files. All have consistent name, aligned.txt
 
@@ -26,9 +26,16 @@ aligned_files=$(find temp -name "aligned.txt")
 # To Do: automatically get header
 # To Do: divide number by number of replicates (currently all replicates of a condition are aligned to the same bed file) 
 
-header 
-echo "C2_In_24" > temp/number.tsv
-awk -F"\t" '{print $NF}' temp/Clone2/Induced/24/aligned.txt >> temp/number.tsv
+for output_file in $aligned_files
+do
+# use file path to make a header
+echo "$output_file" | awk -F"/" '{OFS="_"; {print $2,$3,$4;}}' > temp/number.tsv
 
+# get the read counts
+awk -F"\t" '{print $NF}' $output_file >> temp/number.tsv
+
+paste output/output.tsv temp/number.tsv > temp/growing_output.tsv
+cat temp/growing_output.tsv > output/output.tsv
 # paste into output.tsv. each cycle another column will be added, and output.tsv remade with the extra column
-paste output/output.tsv temp/number.tsv > output/output.tsv
+
+done 
