@@ -19,23 +19,26 @@ awk '{FS="\t"; OFS="\t"; {print $4, $5;}}' TriTrypDB-46_TcongolenseIL3000_2019.b
 
 aligned_files=$(find temp -name "aligned.txt") 
 
-# TO DO: loop, for each output file, for each gene in output/output, add number of reads matching
 # as the bedfile is used to make both the aligned outputs and this final output, the list of genes will be in the same order
 # create a file with a heading relevant to the sample, then add the read counts. The ">" means this file will be overwritten for each loop
 
-# To Do: automatically get header
 # To Do: divide number by number of replicates (currently all replicates of a condition are aligned to the same bed file) 
 
 for output_file in $aligned_files
 do
-# use file path to make a header
-echo "$output_file" | awk -F"/" '{OFS="_"; {print $2,$3,$4;}}' > temp/number.tsv
+	# use file path to make a header
+	echo "$output_file" | awk -F"/" '{OFS="_"; {print $2,$3,$4;}}' > temp/number.tsv
 
-# get the read counts
-awk -F"\t" '{print $NF}' $output_file >> temp/number.tsv
+	# get the number of bamfiles
+	folder=$(echo "$output_file" | awk -F"/" '{OFS="/"; {print $1,$2,$3,$4;}}')
+	N_bam_files=$(find $folder -name "*.bam" |wc -w)
+	
+	# get the read counts, and divide by the number of bed files (which indicate the replicates)
+	awk -F"\t" '{print $NF}' $output_file | while read i; do echo "scale = 2; $i/$N_bam_files" | bc; done >> temp/number.tsv
 
-paste output/output.tsv temp/number.tsv > temp/growing_output.tsv
-cat temp/growing_output.tsv > output/output.tsv
-# paste into output.tsv. each cycle another column will be added, and output.tsv remade with the extra column
+	# cannot paste directly into output/output.tsv, so make an intermediate file 
+	paste output/output.tsv temp/number.tsv > temp/growing_output.tsv
 
+	cat temp/growing_output.tsv > output/output.tsv
+	# paste into output.tsv. each cycle another column will be added, and output.tsv remade with the extra column
 done 
