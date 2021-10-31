@@ -9,19 +9,23 @@ details=$2
 
 # get the list of different samples eg, Clone1, Clone2 or WT and time
 sample_names=$(awk '{FS="\t"; {print $2;}}' $details | uniq | grep -v 'Sample')
+treatments=$(awk '{FS="\t"; {print $5;}}' /localdisk/data/BPSM/AY21/fastq/100k.fqfiles | sort | uniq | grep -v 'Treatment')
 times=$(awk '{FS="\t"; {print $4;}}' $details | sort | uniq | grep -v 'Time')
 
 # make a folder for each sample, treatment and time. uninduced at time 0 is pretretment
 
 for sample in $sample_names
 do 
-	for time in $times
-	do
-	mkdir -p  temp/$sample/Induced/$time
-	mkdir -p temp/$sample/Uninduced/$time
+	for treatment in $treatments
+	do 
+		for time in $times
+		do
+		mkdir -p  temp/$sample/$treatment/$time
+		mkdir -p temp/$sample/$treatment/$time
+		done
 	done
 done
-# mkdir temp/$sample_names
+
 # for each line in the sample file, copy that sample into the relevant directory
 # for line in $(awk '{FS="\t"; OFS="_"; {print $2,$4,$5,$6,$7;} {grep -v 'Sample_Time_Treatment_End1_End2'}}' /localdisk/data/BPSM/AY21/fastq/100k.fqfiles)
 

@@ -19,6 +19,8 @@ path=$(echo "$file" | awk -F "/" '{OFS="/"; {$NF=""; print $0;}}')
 	for sample in $file_name
 	do
 	hisat2 -x temp/hisat_index/index -q -1 "$path$sample"*1* -2 "$path$sample"*2* -S "$path$sample".sam --quiet
+	# To Do: save screen output to a file, to see alignment rate
+	# make file for alignment rate
 	done
 done 
 

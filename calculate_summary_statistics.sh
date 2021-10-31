@@ -1,13 +1,10 @@
 #### to do:: all of this
 
-rm -r output 
-
 # need to extract gene and gene description from the given bed file, then extract the value column from the relevant folders and include for each gene
 
 # want the format:
 # gene	gene_description	C1_Un_0		C1_un_24	C1_un_48	C1_in_24	C1_in_48	C2_Un_0 	C2_un_24        C2_un_48        C2_in_24        C2_in_48	WT_Un_0 	WT_un_24        WT_un_48        WT_in_24        WT_in_48
 
-mkdir output
 
 # get gene and gene description from bedfile file  
 
@@ -34,11 +31,13 @@ do
 	N_bam_files=$(find $folder -name "*.bam" |wc -w)
 	
 	# get the read counts, and divide by the number of bed files (which indicate the replicates)
-	awk -F"\t" '{print $NF}' $output_file | while read i; do echo "scale = 2; $i/$N_bam_files" | bc; done >> temp/number.tsv
+	awk -F"\t" '{ OFS="\t"; {print $NF;}}' $output_file | while read i; do echo "scale = 2; $i/$N_bam_files" | bc; done >> temp/number.tsv
 
 	# cannot paste directly into output/output.tsv, so make an intermediate file 
-	paste output/output.tsv temp/number.tsv > temp/growing_output.tsv
+	paste -d "\t" output/output.tsv temp/number.tsv > temp/growing_output.tsv
 
 	cat temp/growing_output.tsv > output/output.tsv
 	# paste into output.tsv. each cycle another column will be added, and output.tsv remade with the extra column
 done 
+
+

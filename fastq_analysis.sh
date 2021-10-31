@@ -25,9 +25,9 @@ FQC_summaries=$(find temp/fastqc_output -name "summary.txt")
 
 for file in $FQC_summaries
 do
-echo $file
-outcomes=$(awk '{OFS="\t"; {NF--; print $1}}' $file)
+outcomes=$(awk '{OFS="\n"; {NF--; print $1}}' $file)
 file_name=$(echo $file | awk -F "/" '{print $(NF-1);}')
 echo -e $file_name "\t" $outcomes >> output/FASTQC_summary.tsv
+
 done
 
