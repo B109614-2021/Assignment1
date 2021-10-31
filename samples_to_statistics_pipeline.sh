@@ -57,6 +57,23 @@ source align_to_bed_file.sh $bedfile
 
 ### calculate mean read numbers
 
-source calculate_summary_statistics.sh
+echo "calculating mean reads"
+
+source calculate_summary_statistics.sh $bedfile
+
+echo "calculating fold change"
+
+source calculate_fold_change.sh $details
+
+fold_change_path=$(find output -name "fold_change*")
+
+for path in $fold_change_path
+do
+echo "for file " $path ":"
+lines=$(head $path | cut -f1,2,4)
+echo -e "The proteins with the greatest fold increase after 48 hours when induced are:" "\n" $lines
+done
 
 echo "Done"
+
+

@@ -5,12 +5,13 @@
 # want the format:
 # gene	gene_description	C1_Un_0		C1_un_24	C1_un_48	C1_in_24	C1_in_48	C2_Un_0 	C2_un_24        C2_un_48        C2_in_24        C2_in_48	WT_Un_0 	WT_un_24        WT_un_48        WT_in_24        WT_in_48
 
+bedfile=$1
 
 # get gene and gene description from bedfile file  
 
-echo -e "Gene\tDescription" > output/output.tsv
+echo -e "Gene\tDescription" > output/mean_read_counts.tsv
 
-awk '{FS="\t"; OFS="\t"; {print $4, $5;}}' TriTrypDB-46_TcongolenseIL3000_2019.bed >> output/output.tsv
+awk '{FS="\t"; OFS="\t"; {print $4, $5;}}' $bedfile >> output/mean_read_counts.tsv
 
 # Find paths to output files. All have consistent name, aligned.txt
 
@@ -34,9 +35,9 @@ do
 	awk -F"\t" '{ OFS="\t"; {print $NF;}}' $output_file | while read i; do echo "scale = 2; $i/$N_bam_files" | bc; done >> temp/number.tsv
 
 	# cannot paste directly into output/output.tsv, so make an intermediate file 
-	paste -d "\t" output/output.tsv temp/number.tsv > temp/growing_output.tsv
+	paste output/mean_read_counts.tsv temp/number.tsv > temp/growing_output.tsv
 
-	cat temp/growing_output.tsv > output/output.tsv
+	cat temp/growing_output.tsv > output/mean_read_counts.tsv
 	# paste into output.tsv. each cycle another column will be added, and output.tsv remade with the extra column
 done 
 

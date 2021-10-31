@@ -31,3 +31,24 @@ echo -e $file_name "\t" $outcomes >> output/FASTQC_summary.tsv
 
 done
 
+## get read counts and add to summary 
+
+echo "Total sequences" > temp/fastqc_output/total_seq.tsv
+echo "%GC" > temp/fastqc_output/GC.tsv
+echo "Number flagged as poor" > temp/fastqc_output/quality.tsv
+
+FQC_data=$(find temp/fastqc_output -name "fastqc_data.txt")
+
+for file in $FQC_data
+do
+grep "Total Seq" $file | cut -f 2 >> temp/fastqc_output/total_seq.tsv
+grep "%GC" $file | cut -f 2 >> temp/fastqc_output/GC.tsv
+grep "flagged as poor" $file | cut -f 2 >> temp/fastqc_output/quality.tsv 
+done
+
+paste output/FASTQC_summary.tsv temp/fastqc_output/total_seq.tsv > temp/fastqc_output/fastqc_summary.tsv
+
+Sequences flagged as poor quality       0
+Sequence length 100
+%GC     49
+

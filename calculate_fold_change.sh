@@ -4,6 +4,8 @@
 # Then divide by time point 0
 # if heading sample name matches headed, extract
 
+details=$1
+
 # running the script if the temp versions alread exist causes bugs, so remove
 
 rm temp/fold_change_*
@@ -11,7 +13,7 @@ rm temp/growing_*
 
 unset count
 
-unique_samples=$(awk '{FS="\t"; {print $2;}}' /localdisk/data/BPSM/AY21/fastq/100k.fqfiles | uniq | grep -v 'Sample')
+unique_samples=$(awk '{FS="\t"; {print $2;}}' $details | uniq | grep -v 'Sample')
 
 headers=$(head -n 1 output/output.tsv)
 
@@ -19,7 +21,7 @@ headers=$(head -n 1 output/output.tsv)
 
 for sample in $unique_samples
 do
-awk '{FS="\t"; OFS="\t"; {print $1, $2;}}' output/output.tsv > temp/fold_change_"$sample".tsv
+awk '{FS="\t"; OFS="\t"; {print $1, $2;}}' output/mean_read_counts.tsv > temp/fold_change_"$sample".tsv
 done
 
 # use a counter to get the correct index
@@ -35,7 +37,7 @@ head_sample=$(echo $head | awk -F "_" '{print $1;}')
 	do
 		if [[ "$sample" == "$head_sample" ]]
 		then
-		awk -v count="$count" '{FS="\t"; {print $count;}}' output/output.tsv > temp/number_"$sample".tsv
+		awk -v count="$count" '{FS="\t"; {print $count;}}' output/mean_read_counts.tsv > temp/number_"$sample".tsv
 		paste temp/fold_change_"$sample".tsv temp/number_"$sample".tsv > temp/growing_fold_change_"$sample".tsv
 		cat temp/growing_fold_change_"$sample".tsv > temp/fold_change_"$sample".tsv
 		fi
@@ -70,7 +72,7 @@ unset counter_2
 
 for sample in $unique_samples
 do
-awk '{FS="\t"; OFS="\t"; {print $1, $2;}}' output/output.tsv > temp/fold_change_"$sample"_2.tsv
+awk '{FS="\t"; OFS="\t"; {print $1, $2;}}' output/mean_read_counts.tsv > temp/fold_change_"$sample"_2.tsv
 counter_2=1
 echo $sample
 fold_changes_2=$(find temp -name "$sample"_no_time_0*)
@@ -95,7 +97,7 @@ echo $fold_changes_2
 head -n 1 temp/fold_change_"$sample"_2.tsv | echo > output/fold_change_"$sample".tsv
 
 # sort -n -k 4 
-cat temp/fold_change_"$sample"_2.tsv >> output/fold_change_"$sample".tsv
+tail -n +2 temp/fold_change_"$sample"_2.tsv | sort -t$'\t' -k4 -nr | cat  >> output/fold_change_"$sample".tsv
 
 done
 
