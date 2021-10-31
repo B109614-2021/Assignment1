@@ -85,7 +85,7 @@ echo $fold_changes_2
 		# get the header index, removing header so only values are taken
 		cut -f$counter_2 temp/"$sample"_no_time_0.tsv | tail -n +2 > temp/division.tsv
 		# divide by value at time 0 
-		paste temp/"$sample"_time_0.tsv temp/division.tsv | awk '{print $2/$1;}' >> temp/fold_change_value_"$sample".tsv 
+		paste temp/"$sample"_time_0.tsv temp/division.tsv | while read time_0 test; do echo "scale = 2; $test/$time_0" | bc; done >> temp/fold_change_value_"$sample".tsv 
 		# save in output file
 		paste temp/fold_change_"$sample"_2.tsv temp/fold_change_value_"$sample".tsv > temp/growing_fold_change_"$sample"_2.tsv
 		cat temp/growing_fold_change_"$sample"_2.tsv > temp/fold_change_"$sample"_2.tsv
@@ -99,4 +99,5 @@ cat temp/fold_change_"$sample"_2.tsv >> output/fold_change_"$sample".tsv
 
 done
 
+#awk '{print $2/$1;}'
 
