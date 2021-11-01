@@ -1,4 +1,4 @@
-#!/user/bin/bash
+#!/bin/bash
 
 ## run all of the commands from this file
 
@@ -22,6 +22,48 @@ read genome
 
 echo -n 'Please enter path to reference bedfile:'
 read bedfile
+
+### check files exist
+
+
+# check for the sample folder
+
+if [ -d $samples ]; then
+echo "The sample directory exists."
+else
+echo "The sample directory does not exist."
+return
+fi
+
+# check for the details file
+
+if [ -f $details ]; then
+echo "The details file exists."
+else
+echo "The detais file does not exist."
+return 
+fi
+
+# check for genome
+
+if [ -f $genome ]; then
+echo "The genome file exists."
+else
+echo "The genome file does not exist."
+return
+fi
+
+# check for bedfile
+
+if [ -f $bedfile ]; then
+echo "The .bed file exists."
+else
+echo "The .bed file does not exist."
+return
+fi
+
+
+
 
 ### copy existing samples into the standard folder structure of <sample>/<treatment>/<time>
 

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # script that takes the input guide file, and sets up the desired folder structure.
 # want a folder for each sample, containing a folder for control and sample, containing a folder for each time point

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 ### convert to HISAT2 useable format
 
 sample_path=$1

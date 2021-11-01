@@ -1,9 +1,11 @@
-#### to do:: all of this
+#!/bin/bash
 
 # need to extract gene and gene description from the given bed file, then extract the value column from the relevant folders and include for each gene
 
 # want the format:
 # gene	gene_description	C1_Un_0		C1_un_24	C1_un_48	C1_in_24	C1_in_48	C2_Un_0 	C2_un_24        C2_un_48        C2_in_24        C2_in_48	WT_Un_0 	WT_un_24        WT_un_48        WT_in_24        WT_in_48
+
+# get bedfile from parent
 
 bedfile=$1
 
@@ -41,4 +43,4 @@ do
 	# paste into output.tsv. each cycle another column will be added, and output.tsv remade with the extra column
 done 
 
-
+# There should now be one file called mean_read_counts.tsv in the output folder 

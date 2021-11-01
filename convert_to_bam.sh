@@ -1,10 +1,11 @@
+#!/bin/bash
+
 ### convert to bam file
 
-echo "Converting from sam to bam format and creating index"
+echo "Converting from sam to bam format"
 
 sam_files=$(find temp -name "*.sam")
 
-# add basic samtool commands for processing 1 sample
 # need paths to sam files
 # need outputs to be returned in same folder. 
 

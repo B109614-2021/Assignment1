@@ -1,7 +1,6 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # find the samples that have been placed in the temp files
-rm -rf temp/fastqc_output
 
 sample_path=$1
 
