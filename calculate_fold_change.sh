@@ -6,16 +6,16 @@
 
 details=$1
 
-# running the script if the temp versions alread exist causes bugs, so remove
+# running the script if the temp versions already exist, so remove if running the sample individually
+rm -f temp/growing_fold*
+rm -f temp/fold_change*
 
-rm temp/fold_change_*
-rm temp/growing_*
-
+echo $details 
 unset count
 
 unique_samples=$(awk '{FS="\t"; {print $2;}}' $details | uniq | grep -v 'Sample')
 
-headers=$(head -n 1 output/output.tsv)
+headers=$(head -n 1 output/mean_read_counts.tsv)
 
 # make a fold change for each sample
 

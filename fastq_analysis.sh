@@ -43,12 +43,8 @@ for file in $FQC_data
 do
 grep "Total Seq" $file | cut -f 2 >> temp/fastqc_output/total_seq.tsv
 grep "%GC" $file | cut -f 2 >> temp/fastqc_output/GC.tsv
-grep "flagged as poor" $file | cut -f 2 >> temp/fastqc_output/quality.tsv 
+grep "flagged as poor" $file | echo | cut -f 2 >> temp/fastqc_output/quality.tsv 
 done
 
-paste output/FASTQC_summary.tsv temp/fastqc_output/total_seq.tsv > temp/fastqc_output/fastqc_summary.tsv
-
-Sequences flagged as poor quality       0
-Sequence length 100
-%GC     49
-
+paste output/FASTQC_summary.tsv temp/fastqc_output/total_seq.tsv temp/fastqc_output/GC.tsv temp/fastqc_output/quality.tsv > temp/fastqc_output/fastqc_summary.tsv
+cat temp/fastqc_output/fastqc_summary.tsv > output/FASTQC_summary.tsv
